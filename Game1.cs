@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Diagnostics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -6,14 +7,13 @@ namespace ggj20
 {
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        private SpriteFont defaultFont;
-        
+        GraphicsDeviceManager _graphics;
+        SpriteBatch _spriteBatch;
+        private Level _activeLevel;
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -21,21 +21,23 @@ namespace ggj20
         protected override void Initialize()
         {
             VirtualCoords.OnResize(this.Window.ClientBounds.Size);
-            Window.ClientSizeChanged += (sender, args) => VirtualCoords.OnResize(this.Window.ClientBounds.Size); 
+            Window.ClientSizeChanged += (sender, args) => VirtualCoords.OnResize(this.Window.ClientBounds.Size);
+            _activeLevel = new Level("Content/level1.lvl");
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-            defaultFont = Content.Load<SpriteFont>("DefaultFont");
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            _activeLevel.LoadContent(Content);
         }
 
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            // TODO: Add your update logic here
+            
+            _activeLevel.Update();
 
             base.Update(gameTime);
         }
@@ -44,11 +46,9 @@ namespace ggj20
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
-            spriteBatch.DrawString(defaultFont, "Andreas <3 luv you", VirtualCoords.ComputePixelPosition(new Vector2(1.6f / 2.0f, 0.5f)), Color.White);
-            spriteBatch.End();
-            
-            // TODO: Add your drawing code here
+            _spriteBatch.Begin();
+            _activeLevel.Draw(_spriteBatch);
+            _spriteBatch.End();
 
             base.Draw(gameTime);
         }

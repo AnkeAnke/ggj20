@@ -10,18 +10,19 @@ namespace ggj20
     {
         public const float CONSTELLATION_WIDTH = 0.4f;
         private Vector2 centerPosition;
-        
-        Constellation(Word word)
-        {}
+        private Word _associatedWord;
+
+        public Constellation(Word word)
+        {
+            _associatedWord = word;
+        }
 
         public void Update()
         {
-            throw new System.NotImplementedException();
         }
 
         public void Draw()
         {
-            throw new System.NotImplementedException();
         }
     }
 }
