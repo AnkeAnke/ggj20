@@ -19,8 +19,8 @@ namespace ggj20
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
+            VirtualCoords.OnResize(this.Window.ClientBounds.Size);
+            Window.ClientSizeChanged += (sender, args) => VirtualCoords.OnResize(this.Window.ClientBounds.Size); 
             base.Initialize();
         }
 
@@ -42,9 +42,9 @@ namespace ggj20
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            
+
             spriteBatch.Begin();
-            spriteBatch.DrawString(defaultFont, "Anke <3", Vector2.One, Color.White);
+            spriteBatch.DrawString(defaultFont, "Andreas <3 luv you", VirtualCoords.ComputePixelPosition(new Vector2(1.6f / 2.0f, 0.5f)), Color.White);
             spriteBatch.End();
             
             // TODO: Add your drawing code here
