@@ -9,6 +9,7 @@ namespace ggj20
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         private SpriteFont defaultFont;
+        
 
         public Game1()
         {
