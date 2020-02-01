@@ -18,7 +18,7 @@ namespace ggj20
 
     class SwipeKeyboard
     {
-        Texture2D _texture, _star;
+        Texture2D _texture;
 
         public void Draw(SpriteBatch spriteBatch, Vector2 centerPosition)
         {
@@ -29,34 +29,11 @@ namespace ggj20
             Vector2 corner = new Vector2(centerPosition.X - size.X*0.5f, centerPosition.Y - size.Y*0.5f);
             Rectangle screenRect = VirtualCoords.ComputePixelRect(corner, size);
             spriteBatch.Draw(_texture, screenRect, Color.White);
-
-            //float aspBefore = size.X / size.Y;
-            //float aspAfter = screenRect.Width / screenRect.Height;
-
-            // DEBUG.
-            Rectangle aRect = VirtualCoords.ComputePixelRect(corner - new Vector2(0.01f), 0.02f);
-            spriteBatch.Draw(_star, aRect, Color.HotPink);
-            aRect = VirtualCoords.ComputePixelRect(new Vector2(corner.X + size.X- 0.01f, corner.Y - 0.01f), 0.02f);
-            spriteBatch.Draw(_star, aRect, Color.HotPink);
-            aRect = VirtualCoords.ComputePixelRect(new Vector2(corner.X + size.X - 0.01f, corner.Y + size.Y - 0.01f), new Vector2(0.02f));
-            spriteBatch.Draw(_star, aRect, Color.HotPink);
-            aRect = VirtualCoords.ComputePixelRect(new Vector2(1.6f- 0.02f, 1.0f - 0.02f), 0.02f);
-            spriteBatch.Draw(_star, aRect, Color.HotPink);
-
-            // DEBUG.
-            for (int c = 0; c < LETTER_POSITIONS.Length; ++c)
-            {
-                Rectangle starRect = VirtualCoords.ComputePixelRect(corner + LETTER_POSITIONS[c]*size.X - new Vector2(0.01f), 0.02f);
-                spriteBatch.Draw(_star, starRect, Color.DarkRed);
-            }
         }
-
-        // public void Update(GameTime gameTime){}
 
         public void LoadContent(ContentManager content)
         {
             _texture = content.Load<Texture2D>("Keyboard/keyboard");
-            _star = content.Load<Texture2D>("Keyboard/star"); // DEBUG
         }
         public void GetLetterDistances(Vector2 position, float[] letterDists)
         {
