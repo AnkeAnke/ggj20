@@ -19,6 +19,7 @@ namespace ggj20
             _graphics.PreferredBackBufferWidth = 1600;  // set this value to the desired width of your window
             _graphics.PreferredBackBufferHeight = 1000;   // set this value to the desired height of your window
             _graphics.ApplyChanges();
+            _activeLevel = new Level();
         }
 
         protected override void Initialize()
@@ -26,7 +27,6 @@ namespace ggj20
             VirtualCoords.OnResize(new Point(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
             //this.Window.ClientBounds.Size);
             Window.ClientSizeChanged += (sender, args) => VirtualCoords.OnResize(this.Window.ClientBounds.Size);
-            _activeLevel = new Level("Content/level1.lvl");
             base.Initialize();
         }
 
@@ -34,6 +34,7 @@ namespace ggj20
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             StyleSheet.LoadContent(Content);
+			_activeLevel.LoadLevel("Content/level1.lvl");
         }
 
         protected override void Update(GameTime gameTime)
@@ -48,7 +49,7 @@ namespace ggj20
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(StyleSheet.BackgroundColor);
 
             _spriteBatch.Begin();
             _activeLevel.Draw(_spriteBatch);

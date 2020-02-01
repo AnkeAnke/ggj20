@@ -14,12 +14,13 @@ namespace ggj20
         private Constellation[] _constellations;
         private Word[] _words;
 
-        public Level(string filename)
+        public Level()
         {
-            LoadLevel(filename);
         }
-        
-        private void LoadLevel(string filename)
+
+        private string CurrentSentence => string.Join(' ', _words.Select(w => w.WordString).ToArray());
+
+        public void LoadLevel(string filename)
         {
             var contents = File.ReadAllText(filename);
             var lines = contents.Split('\n');

@@ -21,10 +21,7 @@ namespace ggj20
             get; private set;
         }
 
-        public static Color BackgroundColor
-        {
-            get; private set;
-        }
+        public static readonly Color BackgroundColor = new Color(5, 5, 20);
 
         public static Color HighlightColor
         {
@@ -47,7 +44,6 @@ namespace ggj20
             StarTexture     = content.Load<Texture2D>("Keyboard/star");
             DefaultFont     = content.Load<SpriteFont>("DefaultFont");
             ScalingFontToWorld = TEXT_HEIGHT / DefaultFont.MeasureString("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").Y;
-            BackgroundColor = Color.LightBlue;
             HighlightColor = Color.White;
         }
     }
