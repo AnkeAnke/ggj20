@@ -44,6 +44,21 @@ namespace ggj20
 
         public void Update(GameTime gameTime)
         {
+            // space out the words
+            {
+                var totalSentenceWidth = _words.Select(w => w.WordWidth).Sum() + (_words.Length - 1) * _words[0].WhiteSpaceWidth;
+                float curX = (VirtualCoords.RELATIVE_MAX.X - totalSentenceWidth) * 0.5f;
+                                     
+                foreach (var word in _words)
+                {
+                    curX += word.WordWidth * 0.5f;
+                    word.CenterPosition = new Vector2(curX, VirtualCoords.RELATIVE_MAX.Y * 0.5f);
+                    curX += word.WordWidth * 0.5f + word.WhiteSpaceWidth;
+                }
+            }
+            
+            foreach (var word in _words)
+                word.Update();
             foreach (var constellation in _constellations)
                 constellation?.Update(gameTime);
         }
