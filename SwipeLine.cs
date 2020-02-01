@@ -50,7 +50,7 @@ namespace ggj20
                 float radius = MathHelper.Lerp(BASE_STAR_SIZE, SELECTED_STAR_SIZE, _selectIntepolationHandles[h]);
                 float radiusScaled = VirtualCoords.ComputePixelScale(radius);
 
-                Point cornerStar = new Point((int)(rectKeyboard.X + rectKeyboard.Width  * HandlePositionsRelative[h].X - radiusScaled + 0.5f)
+                Point cornerStar = new Point((int)(rectKeyboard.X + rectKeyboard.Width * HandlePositionsRelative[h].X - radiusScaled + 0.5f)
                                            , (int)(rectKeyboard.Y + rectKeyboard.Width * HandlePositionsRelative[h].Y - radiusScaled + 0.5f));
                 Rectangle starRect = new Rectangle((int)cornerStar.X, (int)cornerStar.Y, (int)radiusScaled * 2, (int)radiusScaled * 2);
                 // Rectangle starRect = VirtualCoords.ComputePixelRect_Centered(Handles[h], radius);
@@ -73,9 +73,7 @@ namespace ggj20
             Rectangle rectKeyboard = VirtualCoords.ComputePixelRect(cornerKeyboard, sizeKeyboard);
             if (_selectedHandle != -1)
             {
-                //Point mouseDist = (mouseState.Position - _selectedLastMousePos);
-                HandlePositionsRelative[_selectedHandle] = (mouseState.Position - VirtualCoords.FieldPixelOffset).ToVector2() / VirtualCoords.FieldPixelSizeMin;
-                    //+= new Vector2((float)mouseDist.X / rectKeyboard.Width, (float)mouseDist.Y / rectKeyboard.Height);
+                HandlePositionsRelative[_selectedHandle] = (mouseState.Position - rectKeyboard.Location).ToVector2() / rectKeyboard.Width;
                 _selectedLastMousePos = mouseState.Position;
             }
 
