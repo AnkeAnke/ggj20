@@ -53,10 +53,10 @@ namespace ggj20
             var words = sentence.Split(' ');
             
             // Sorted variations for every word.
-            var sentenceVariations = new List<(string, float)>[words.Length];
+            var sentenceVariations = new List<(string word, float wordDiff)>[words.Length];
             for(int wi =0; wi<words.Length; ++wi)
             {
-                sentenceVariations[wi] = new List<(string, float)>();
+                sentenceVariations[wi] = new List<(string word, float wordDiff)>();
                 // only words that start with a number can actually change
                 if (!char.IsDigit(words[wi][0]))
                     sentenceVariations[wi].Add((words[wi], 0.0f));
@@ -64,37 +64,48 @@ namespace ggj20
                 {
                     string word = words[wi].Substring(1);
                     sentenceVariations[wi].AddRange(_wordsByLength[word.Length]
-                        .Select(dictionaryWord => (dictionaryWord, WordDifference(dictionaryWord, word)))
-                        .OrderBy(t => t.Item2));
+                        .Select(dictionaryWord => (word: dictionaryWord, wordDiff: WordDifference(dictionaryWord, word)))
+                        .OrderBy(t => t.wordDiff));
                 }
             }
             
             // look at all possible ways to advance from here
-            var indices = new List<(float, int[], string)>(); // priority queue anyone?
+            var visitedSentences = new HashSet<string>();
+            var indices = new List<(float score, int[] indices, string sentence)>(); // priority queue anyone?
             indices.Add((0.0f, new int[sentenceVariations.Length], 
                 string.Join(' ', sentenceVariations.Select(v => v.First().Item1))));
 
             while (indices.Count > 0)
             {
                 // yield best sentence
-                indices.Sort((a, b) => b.Item1.CompareTo(a.Item1));
-                var current = indices.Last();
+                indices.Sort((a, b) => b.score.CompareTo(a.score));
+                var popped = indices.Last();
                 indices.RemoveAt(indices.Count - 1);
-                yield return (current.Item3, current.Item1);
+                yield return (popped.sentence, popped.score);
                 
                 // add more sentences
                 for (int i = 0; i < sentenceVariations.Length; ++i)
                 {
-                    var newIndices = (int[])current.Item2.Clone();
+                    if (popped.indices[i] + 1 == sentenceVariations[i].Count)
+                        continue;
+                    
+                    var newIndices = (int[])popped.indices.Clone();
                     newIndices[i] += 1;
-                    if (newIndices[i] == sentenceVariations[i].Count) continue;
-
+                    
                     var selectedWords =
                         sentenceVariations.Zip(newIndices).Select(x => x.First[x.Second]).ToList();
 
-                    indices.Add((selectedWords.Sum(tuple => tuple.Item2),
-                        newIndices,
-                        string.Join(' ', selectedWords.Select(x => x.Item1))));
+                    var newSentence = string.Join(' ', selectedWords.Select(x => x.word));
+
+                    if (visitedSentences.Add(newSentence))
+                    {
+                        indices.Add(
+                            (
+                                score: selectedWords.Sum(tuple => tuple.wordDiff),
+                                indices: newIndices,
+                                sentence: newSentence
+                            ));
+                    }
                 }
             }
         }

@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ggj20", "ggj20.csproj", "{FEC8FABD-B334-4CC3-9CD9-9048A6BC218F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SentencePermutator", "SentencePermutator\SentencePermutator.csproj", "{FC9E03E3-AC5A-448F-87A0-09CAA3DDC605}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{FEC8FABD-B334-4CC3-9CD9-9048A6BC218F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEC8FABD-B334-4CC3-9CD9-9048A6BC218F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEC8FABD-B334-4CC3-9CD9-9048A6BC218F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC9E03E3-AC5A-448F-87A0-09CAA3DDC605}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC9E03E3-AC5A-448F-87A0-09CAA3DDC605}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC9E03E3-AC5A-448F-87A0-09CAA3DDC605}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC9E03E3-AC5A-448F-87A0-09CAA3DDC605}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

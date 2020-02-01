@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <MonoGameContentReference Include="**\*.mgcb" />
+    <MonoGameContentReference Remove="SentencePermutator\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +22,15 @@
     <None Update="Content\dictionary.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Remove="SentencePermutator\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="SentencePermutator\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="SentencePermutator\**" />
   </ItemGroup>
 
 </Project>
