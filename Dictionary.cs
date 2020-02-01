@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Microsoft.Xna.Framework;
 
 namespace ggj20
 {
@@ -23,11 +24,82 @@ namespace ggj20
             var testWord = "princess";
             var testSwipePattern = new float[SwipeKeyboard.LETTER_POSITIONS.Length, testWord.Length];
             for (int li = 0; li < testWord.Length; ++li)
+            {
                 testSwipePattern[char.ToLower(testWord[li]) - 'a', li] = 1.0f;
+            }
             Debug.Assert(ClosestWordsToSwipePattern(testSwipePattern).First() == testWord);
+
+            //foreach(var sentence in ComputeSentenceVariations("the 0princess is in another 1castle"))
+            //    Console.WriteLine(sentence.Item1, sentence.Item2);
         }
 
-        public IEnumerable<string> ClosestWordsToSwipePattern(float[,] swipePattern)
+        public string ClosestWordToSwipePattern(float[,] swipePattern)
+        {
+            return ClosestWordsToSwipePattern(swipePattern).First();
+        }
+
+        public IEnumerable<Vector2> WordToSwipePositions(string word) => 
+            word.Select(l => SwipeKeyboard.LETTER_POSITIONS[char.ToLower(l) - 'a']);
+
+        private float SwipePatternDifference(IEnumerable<Vector2> swipePatternPositionsA, IEnumerable<Vector2> swipePatternPositionsB) =>
+            swipePatternPositionsA.Zip(swipePatternPositionsB)
+                .Select(tuple => (tuple.First - tuple.Second).LengthSquared()).Sum();
+
+        public float WordDifference(string wordA, string wordB) =>
+            SwipePatternDifference(WordToSwipePositions(wordA), WordToSwipePositions(wordB));
+
+        public IEnumerable<(string, float)> ComputeSentenceVariations(string sentence)
+        {
+            var words = sentence.Split(' ');
+            
+            // Sorted variations for every word.
+            var sentenceVariations = new List<(string, float)>[words.Length];
+            for(int wi =0; wi<words.Length; ++wi)
+            {
+                sentenceVariations[wi] = new List<(string, float)>();
+                // only words that start with a number can actually change
+                if (!char.IsDigit(words[wi][0]))
+                    sentenceVariations[wi].Add((words[wi], 0.0f));
+                else
+                {
+                    string word = words[wi].Substring(1);
+                    sentenceVariations[wi].AddRange(_wordsByLength[word.Length]
+                        .Select(dictionaryWord => (dictionaryWord, WordDifference(dictionaryWord, word)))
+                        .OrderBy(t => t.Item2));
+                }
+            }
+            
+            // look at all possible ways to advance from here
+            var indices = new List<(float, int[], string)>(); // priority queue anyone?
+            indices.Add((0.0f, new int[sentenceVariations.Length], 
+                string.Join(' ', sentenceVariations.Select(v => v.First().Item1))));
+
+            while (indices.Count > 0)
+            {
+                // yield best sentence
+                indices.Sort((a, b) => b.Item1.CompareTo(a.Item1));
+                var current = indices.Last();
+                indices.RemoveAt(indices.Count - 1);
+                yield return (current.Item3, current.Item1);
+                
+                // add more sentences
+                for (int i = 0; i < sentenceVariations.Length; ++i)
+                {
+                    var newIndices = (int[])current.Item2.Clone();
+                    newIndices[i] += 1;
+                    if (newIndices[i] == sentenceVariations[i].Count) continue;
+
+                    var selectedWords =
+                        sentenceVariations.Zip(newIndices).Select(x => x.First[x.Second]).ToList();
+
+                    indices.Add((selectedWords.Sum(tuple => tuple.Item2),
+                        newIndices,
+                        string.Join(' ', selectedWords.Select(x => x.Item1))));
+                }
+            }
+        }
+
+        private IEnumerable<string> ClosestWordsToSwipePattern(float[,] swipePattern)
         {
             var wordLength = swipePattern.GetLength(1);
             return _wordsByLength[wordLength].OrderByDescending(word => 
