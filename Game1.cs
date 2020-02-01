@@ -48,7 +48,7 @@ namespace ggj20
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(StyleSheet.BackgroundColor);
+            GraphicsDevice.Clear(StyleSheet.ClearColor);
 
             _spriteBatch.Begin(blendState: BlendState.NonPremultiplied);
             _activeLevel.Draw(_spriteBatch);

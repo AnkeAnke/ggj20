@@ -21,7 +21,8 @@ namespace ggj20
             get; private set;
         }
 
-        public static readonly Color BackgroundColor = new Color(5, 5, 20);
+        public static readonly Color ClearColor = new Color(5,5,10);
+        public static readonly Color BackgroundColor = Color.LightBlue;
 
         public static Color HighlightColor
         {
