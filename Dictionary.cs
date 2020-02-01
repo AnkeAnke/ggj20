@@ -10,7 +10,7 @@ namespace ggj20
     public class Dictionary
     {
         private List<List<string>> _wordsByLength;
-        
+
         public void Load()
         {
             var dict = File.ReadLines("Content/dictionary.txt").ToList();
@@ -27,9 +27,9 @@ namespace ggj20
             {
                 testSwipePattern[char.ToLower(testWord[li]) - 'a', li] = 1.0f;
             }
-            Debug.Assert(ClosestWordsToSwipePattern(testSwipePattern).First() == testWord);
+            Debug.Assert(ClosestWordToSwipePattern(testSwipePattern) == testWord);
 
-            //foreach(var sentence in ComputeSentenceVariations("the 0princess is in another 1castle"))
+            //=foreach(var sentence in ComputeSentenceVariations("the 0princess is in another 1castle"))
             //    Console.WriteLine(sentence.Item1, sentence.Item2);
         }
 
@@ -37,18 +37,17 @@ namespace ggj20
         {
             return ClosestWordsToSwipePattern(swipePattern).First();
         }
-
-        public IEnumerable<Vector2> WordToSwipePositions(string word) => 
-            word.Select(l => SwipeKeyboard.LETTER_POSITIONS[char.ToLower(l) - 'a']);
-
-        private float SwipePatternDifference(IEnumerable<Vector2> swipePatternPositionsA, IEnumerable<Vector2> swipePatternPositionsB) =>
+        public float SwipePatternDifference(IEnumerable<Vector2> swipePatternPositionsA, IEnumerable<Vector2> swipePatternPositionsB) =>
             swipePatternPositionsA.Zip(swipePatternPositionsB)
                 .Select(tuple => (tuple.First - tuple.Second).LengthSquared()).Sum();
 
+        /// <summary>
+        /// hyphothetical - real user words ahve floaty swipe patterns
+        /// </summary>
         public float WordDifference(string wordA, string wordB) =>
-            SwipePatternDifference(WordToSwipePositions(wordA), WordToSwipePositions(wordB));
-
-        public IEnumerable<(string, float)> ComputeSentenceVariations(string sentence)
+            SwipePatternDifference(SwipeKeyboard.WordToSwipePositions(wordA), SwipeKeyboard.WordToSwipePositions(wordB));
+        
+        public IEnumerable<(string sentence, float score)> ComputeSentenceVariations(string sentence)
         {
             var words = sentence.Split(' ');
             

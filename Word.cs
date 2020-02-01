@@ -8,6 +8,7 @@ namespace ggj20
     {
         public string WordString => _word;
         private string _word;
+        public readonly string OriginalWord;
 
         public float WordWidth { get; private set; }
 
@@ -15,6 +16,7 @@ namespace ggj20
         
         public Word(string word)
         {
+            OriginalWord = _word;
             _word = word;
         }
 

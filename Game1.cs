@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -45,6 +46,12 @@ namespace ggj20
                 Exit();
             
             _activeLevel.Update(gameTime);
+            
+            // compute current score
+            float score = _activeLevel.ActiveConstellations.Sum(
+                constellation =>
+                    _dictionary.SwipePatternDifference(constellation.ActiveConfiguration, constellation.OriginalConfiguration)
+            );
 
             base.Update(gameTime);
         }

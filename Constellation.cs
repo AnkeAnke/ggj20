@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Linq;
 
 namespace ggj20
 {
@@ -21,6 +22,9 @@ namespace ggj20
         private SwipeLine _swipeLine;
         private float _selectionInterpolation;
 
+        public Vector2[] ActiveConfiguration => _swipeLine.HandlePositionsRelative;
+        public readonly Vector2[] OriginalConfiguration;
+
         public Constellation(Word word, Vector2 center)
         {
             _associatedWord = word;
@@ -28,6 +32,8 @@ namespace ggj20
             _underlyingKeyboard = new SwipeKeyboard();
             _swipeLine = new SwipeLine(word.WordString);
             _selectionInterpolation = 0;
+
+            OriginalConfiguration = SwipeKeyboard.WordToSwipePositions(_associatedWord.OriginalWord).ToArray();
         }
 
         public void Update(GameTime gameTime)

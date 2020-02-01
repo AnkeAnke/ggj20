@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -11,6 +12,7 @@ namespace ggj20
 {
     public class Level
     {
+        public IEnumerable<Constellation> ActiveConstellations => _constellations.Where(c => c != null); 
         private Constellation[] _constellations;
         private Word[] _words;
 
