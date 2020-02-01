@@ -18,23 +18,21 @@ namespace ggj20
 
     class SwipeKeyboard
     {
-        Texture2D _texture;
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 centerPosition)
+        public void Draw(SpriteBatch spriteBatch, float selectionInterpolation, Vector2 centerPosition)
         {
+            // Hidden if not selected.
+            // if (selectionInterpolation == 0) return;
+            
             Vector2 size = new Vector2(Constellation.CONSTELLATION_WIDTH, 0);
-            float scale  = size.X / _texture.Width;
-            size.Y       = _texture.Height * scale;
+            float scale  = size.X / StyleSheet.KeyboardTexture.Width;
+            size.Y       = StyleSheet.KeyboardTexture.Height * scale;
 
             Vector2 corner = new Vector2(centerPosition.X - size.X*0.5f, centerPosition.Y - size.Y*0.5f);
             Rectangle screenRect = VirtualCoords.ComputePixelRect(corner, size);
-            spriteBatch.Draw(_texture, screenRect, Color.White);
+            spriteBatch.Draw(StyleSheet.KeyboardTexture, screenRect, StyleSheet.BackgroundColor);
         }
 
-        public void LoadContent(ContentManager content)
-        {
-            _texture = content.Load<Texture2D>("Keyboard/keyboard");
-        }
         public void GetLetterDistances(Vector2 position, float[] letterDists)
         {
             Debug.Assert(letterDists.Length == LETTER_POSITIONS.Length, "Wrong input size, assumed 26.");

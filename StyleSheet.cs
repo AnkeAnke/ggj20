@@ -1,0 +1,54 @@
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ggj20
+{
+    static class StyleSheet
+    {
+        public static readonly float TEXT_HEIGHT = 0.1f;
+
+        public static SpriteFont DefaultFont
+        {
+            get; private set;
+        }
+
+        public static float ScalingFontToWorld
+        {
+            get; private set;
+        }
+
+        public static Color BackgroundColor
+        {
+            get; private set;
+        }
+
+        public static Color HighlightColor
+        {
+            get; private set;
+        }
+
+        public static Texture2D KeyboardTexture
+        {
+            get; private set;
+        }
+
+        public static Texture2D StarTexture
+        {
+            get; private set;
+        }
+
+        public static void LoadContent(ContentManager content)
+        {
+            KeyboardTexture = content.Load<Texture2D>("Keyboard/keyboard");
+            StarTexture     = content.Load<Texture2D>("Keyboard/star");
+            DefaultFont     = content.Load<SpriteFont>("DefaultFont");
+            ScalingFontToWorld = TEXT_HEIGHT / DefaultFont.MeasureString("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").Y;
+            BackgroundColor = Color.LightBlue;
+            HighlightColor = Color.White;
+        }
+    }
+}

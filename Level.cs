@@ -40,14 +40,6 @@ namespace ggj20
                 }
             }
         }
-        
-        public void LoadContent(ContentManager content)
-        {
-            foreach (var word in _words)
-                word.LoadContent(content);
-            foreach (var constellation in _constellations)
-                constellation?.LoadContent(content);
-        }
 
         public void Update(GameTime gameTime)
         {

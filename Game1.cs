@@ -33,7 +33,7 @@ namespace ggj20
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _activeLevel.LoadContent(Content);
+            StyleSheet.LoadContent(Content);
         }
 
         protected override void Update(GameTime gameTime)
