@@ -16,11 +16,15 @@ namespace ggj20
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            _graphics.PreferredBackBufferWidth = 1600;  // set this value to the desired width of your window
+            _graphics.PreferredBackBufferHeight = 1000;   // set this value to the desired height of your window
+            _graphics.ApplyChanges();
         }
 
         protected override void Initialize()
         {
-            VirtualCoords.OnResize(this.Window.ClientBounds.Size);
+            VirtualCoords.OnResize(new Point(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
+            //this.Window.ClientBounds.Size);
             Window.ClientSizeChanged += (sender, args) => VirtualCoords.OnResize(this.Window.ClientBounds.Size);
             _activeLevel = new Level("Content/level1.lvl");
             base.Initialize();

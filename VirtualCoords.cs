@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace ggj20
 {
@@ -8,7 +9,7 @@ namespace ggj20
         /// <summary>
         /// all relative coordinates are from 0 to RELATIVE_MAX
         /// </summary>
-        static public readonly Vector2 RELATIVE_MAX = new Vector2(2f, 1.0f);
+        static public readonly Vector2 RELATIVE_MAX = new Vector2(1.6f, 1.0f);
 
         static public readonly float RELATIVECOR_ASPECT_RATIO = (float)RELATIVE_MAX.X / RELATIVE_MAX.Y;
 
@@ -20,6 +21,11 @@ namespace ggj20
             get { return fieldSize_pixel; }
         }
         private static Point fieldSize_pixel;
+
+        private static int FieldPixelSizeMin
+        {
+            get { return Math.Min(fieldSize_pixel.X, fieldSize_pixel.Y);  }
+        }
 
 
         /// <summary>
@@ -43,7 +49,7 @@ namespace ggj20
         /// <param name="uniformSize">uniform size in relative game cord</param>
         public static Rectangle ComputePixelRect(Vector2 position, float uniformSize)
         {
-            return ComputePixelRect(position, new Vector2(uniformSize / RELATIVECOR_ASPECT_RATIO, uniformSize));
+            return ComputePixelRect(position, new Vector2(uniformSize, uniformSize));
         }
 
         public static Rectangle ComputePixelRect(Vector2 position, Vector2 size)
@@ -61,7 +67,7 @@ namespace ggj20
 
         public static float ComputePixelScale(float relativeScale)
         {
-            return relativeScale * fieldSize_pixel.Y;
+            return relativeScale * FieldPixelSizeMin;
         }
         public static float ComputeTextureScale(float relativeSize, int textureSize)
         {
@@ -69,8 +75,8 @@ namespace ggj20
         }
         public static Vector2 ComputePixelScale(Vector2 relativeScale)
         {
-            return new Vector2(relativeScale.X * fieldSize_pixel.X,
-                               relativeScale.Y * fieldSize_pixel.Y);
+            return new Vector2(relativeScale.X * FieldPixelSizeMin,
+                               relativeScale.Y * FieldPixelSizeMin);
         }
 
         /// <summary>

@@ -30,14 +30,17 @@ namespace ggj20
             Rectangle screenRect = VirtualCoords.ComputePixelRect(corner, size);
             spriteBatch.Draw(_texture, screenRect, Color.White);
 
+            //float aspBefore = size.X / size.Y;
+            //float aspAfter = screenRect.Width / screenRect.Height;
+
             // DEBUG.
             Rectangle aRect = VirtualCoords.ComputePixelRect(corner - new Vector2(0.01f), 0.02f);
             spriteBatch.Draw(_star, aRect, Color.HotPink);
             aRect = VirtualCoords.ComputePixelRect(new Vector2(corner.X + size.X- 0.01f, corner.Y - 0.01f), 0.02f);
             spriteBatch.Draw(_star, aRect, Color.HotPink);
-            aRect = VirtualCoords.ComputePixelRect(new Vector2(corner.X + size.X - 0.01f, corner.Y + size.Y - 0.01f), 0.02f);
+            aRect = VirtualCoords.ComputePixelRect(new Vector2(corner.X + size.X - 0.01f, corner.Y + size.Y - 0.01f), new Vector2(0.02f));
             spriteBatch.Draw(_star, aRect, Color.HotPink);
-            aRect = VirtualCoords.ComputePixelRect(new Vector2(corner.X - 0.01f, corner.Y + size.Y - 0.01f), 0.02f);
+            aRect = VirtualCoords.ComputePixelRect(new Vector2(1.6f- 0.02f, 1.0f - 0.02f), 0.02f);
             spriteBatch.Draw(_star, aRect, Color.HotPink);
 
             // DEBUG.
