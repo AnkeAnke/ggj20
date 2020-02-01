@@ -37,7 +37,7 @@ namespace ggj20
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             
-            _activeLevel.Update();
+            _activeLevel.Update(gameTime);
 
             base.Update(gameTime);
         }

@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -35,7 +36,7 @@ namespace ggj20
                 {
                     Debug.Assert(constellationNumber < _constellations.Length);
                     Debug.Assert(_constellations[constellationNumber] == null);
-                    _constellations[constellationNumber] = new Constellation(_words[i]);
+                    _constellations[constellationNumber] = new Constellation(_words[i], CONSTELLATION_CENTERS[constellationNumber]);
                 }
             }
         }
@@ -44,12 +45,14 @@ namespace ggj20
         {
             foreach (var word in _words)
                 word.LoadContent(content);
+            foreach (var constellation in _constellations)
+                constellation?.LoadContent(content);
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             foreach (var constellation in _constellations)
-                constellation?.Update();
+                constellation?.Update(gameTime);
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -57,7 +60,16 @@ namespace ggj20
             foreach (var word in _words)
                 word.Draw(spriteBatch);
             foreach (var constellation in _constellations)
-                constellation?.Draw();
+                constellation?.Draw(spriteBatch);
         }
+
+        static readonly Vector2[] CONSTELLATION_CENTERS = new Vector2[]
+        {
+            new Vector2(0.55f, 0.3f),
+            new Vector2(0.80f, 0.7f),
+            new Vector2(1.05f, 0.3f),
+            new Vector2(0.30f, 0.7f),
+            new Vector2(1.30f, 0.7f),
+        };
     }
 }

@@ -8,7 +8,7 @@ namespace ggj20
         /// <summary>
         /// all relative coordinates are from 0 to RELATIVE_MAX
         /// </summary>
-        static public readonly Vector2 RELATIVE_MAX = new Vector2(1.6f, 1.0f);
+        static public readonly Vector2 RELATIVE_MAX = new Vector2(2f, 1.0f);
 
         static public readonly float RELATIVECOR_ASPECT_RATIO = (float)RELATIVE_MAX.X / RELATIVE_MAX.Y;
 
