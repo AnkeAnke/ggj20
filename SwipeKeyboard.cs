@@ -40,7 +40,7 @@ namespace ggj20
             Debug.Assert(letterDists.Length == LETTER_POSITIONS.Length, "Wrong input size, assumed 26.");
             for (int c = 0; c < LETTER_POSITIONS.Length; ++c)
             {
-                letterDists[c] = (position - LETTER_POSITIONS[c]).LengthSquared();
+                letterDists[c] = 1.0f / (position - LETTER_POSITIONS[c]).LengthSquared();
             }
         }
         static readonly Vector2[] LETTER_POSITIONS =
