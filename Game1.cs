@@ -10,6 +10,7 @@ namespace ggj20
         GraphicsDeviceManager _graphics;
         SpriteBatch _spriteBatch;
         private Level _activeLevel;
+        private Dictionary _dictionary;
 
         public Game1()
         {
@@ -26,6 +27,8 @@ namespace ggj20
         {
             VirtualCoords.OnResize(new Point(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
             Window.ClientSizeChanged += (sender, args) => VirtualCoords.OnResize(this.Window.ClientBounds.Size);
+            _dictionary = new Dictionary();
+            _dictionary.Load();
             base.Initialize();
         }
 

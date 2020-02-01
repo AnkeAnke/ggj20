@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -40,15 +41,12 @@ namespace ggj20
             corner = new Vector2(centerPosition.X - size.X * 0.5f, centerPosition.Y - size.Y * 0.5f);
         }
 
-        public void GetLetterDistances(Vector2 position, float[] letterDists)
+        public static IEnumerable<float> GetLetterDistances(Vector2 position)
         {
-            Debug.Assert(letterDists.Length == LETTER_POSITIONS.Length, "Wrong input size, assumed 26.");
-            for (int c = 0; c < LETTER_POSITIONS.Length; ++c)
-            {
-                letterDists[c] = 1.0f / (position - LETTER_POSITIONS[c]).LengthSquared();
-            }
+            return LETTER_POSITIONS.Select(t => 1.0f / (position - t).LengthSquared());
         }
-        static readonly Vector2[] LETTER_POSITIONS =
+        
+        public static readonly Vector2[] LETTER_POSITIONS =
         {
             new Vector2(0.097f, 0.204f), // a
             new Vector2(0.601f, 0.350f), // b
