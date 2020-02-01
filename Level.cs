@@ -76,7 +76,7 @@ namespace ggj20
         static readonly Vector2[] CONSTELLATION_CENTERS = new Vector2[]
         {
             new Vector2(0.55f, 0.3f),
-            new Vector2(0.80f, 0.7f),
+            new Vector2(0.80f, 0.85f),
             new Vector2(1.05f, 0.3f),
             new Vector2(0.30f, 0.7f),
             new Vector2(1.30f, 0.7f),

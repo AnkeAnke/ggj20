@@ -12,6 +12,7 @@ namespace ggj20
         SpriteBatch _spriteBatch;
         private Level _activeLevel;
         private Dictionary _dictionary;
+        private RateMeButton _rateMeButton;
 
         public Game1()
         {
@@ -22,6 +23,7 @@ namespace ggj20
             _graphics.PreferredBackBufferHeight = 1000;   // set this value to the desired height of your window
             _graphics.ApplyChanges();
             _activeLevel = new Level();
+            _rateMeButton = new RateMeButton();
         }
 
         protected override void Initialize()
@@ -52,6 +54,8 @@ namespace ggj20
                 constellation =>
                     _dictionary.SwipePatternDifference(constellation.ActiveConfiguration, constellation.OriginalConfiguration)
             );
+            
+            _rateMeButton.Update();
 
             base.Update(gameTime);
         }
@@ -62,6 +66,7 @@ namespace ggj20
 
             _spriteBatch.Begin(blendState: BlendState.AlphaBlend);
             _activeLevel.Draw(_spriteBatch);
+            _rateMeButton.Draw(_spriteBatch);
             _spriteBatch.End();
 
             base.Draw(gameTime);
