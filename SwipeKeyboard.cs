@@ -41,9 +41,9 @@ namespace ggj20
             spriteBatch.Draw(_star, aRect, Color.HotPink);
 
             // DEBUG.
-            for (int c = 0; c < 26; ++c)
+            for (int c = 0; c < LETTER_POSITIONS.Length; ++c)
             {
-                Rectangle starRect = VirtualCoords.ComputePixelRect(corner + LETTER_POSIIIONS[c]*size.X - new Vector2(0.01f), 0.02f);
+                Rectangle starRect = VirtualCoords.ComputePixelRect(corner + LETTER_POSITIONS[c]*size.X - new Vector2(0.01f), 0.02f);
                 spriteBatch.Draw(_star, starRect, Color.DarkRed);
             }
         }
@@ -55,12 +55,15 @@ namespace ggj20
             _texture = content.Load<Texture2D>("Keyboard/keyboard");
             _star = content.Load<Texture2D>("Keyboard/star"); // DEBUG
         }
-        public void GetLetterDistances(float[] letterDists)
+        public void GetLetterDistances(Vector2 position, float[] letterDists)
         {
-            Debug.Assert(letterDists.Length == 26, "Wrong input size, assumed 26.");
-
+            Debug.Assert(letterDists.Length == LETTER_POSITIONS.Length, "Wrong input size, assumed 26.");
+            for (int c = 0; c < LETTER_POSITIONS.Length; ++c)
+            {
+                letterDists[c] = (position - LETTER_POSITIONS[c]).LengthSquared();
+            }
         }
-        static readonly Vector2[] LETTER_POSIIIONS =
+        static readonly Vector2[] LETTER_POSITIONS =
         {
             new Vector2(0.097f, 0.204f), // a
             new Vector2(0.601f, 0.350f), // b
