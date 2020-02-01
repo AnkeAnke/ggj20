@@ -28,7 +28,7 @@ namespace ggj20
 
             Rectangle screenRect = VirtualCoords.ComputePixelRect(corner, size);
             Color offColor = StyleSheet.BackgroundColor;
-            Color color = offColor * selectionInterpolation;
+            Color color = offColor * selectionInterpolation * 0.2f;
             spriteBatch.Draw(StyleSheet.KeyboardTexture, screenRect, color);
         }
 
@@ -45,9 +45,8 @@ namespace ggj20
         {
             return LETTER_POSITIONS.Select(t => 1.0f / (position - t).LengthSquared());
         }
-        
-        public static readonly Vector2[] LETTER_POSITIONS =
-        {
+
+        public static readonly Vector2[] LETTER_POSITIONS =        {
             new Vector2(0.097f, 0.204f), // a
             new Vector2(0.601f, 0.350f), // b
             new Vector2(0.396f, 0.350f), // c

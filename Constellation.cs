@@ -18,6 +18,7 @@ namespace ggj20
         private Vector2 _centerPosition;
         private Word _associatedWord;
         private SwipeKeyboard _underlyingKeyboard;
+        private SwipeLine _swipeLine;
         private float _selectionInterpolation;
 
         public Constellation(Word word, Vector2 center)
@@ -25,6 +26,7 @@ namespace ggj20
             _associatedWord = word;
             _centerPosition = center;
             _underlyingKeyboard = new SwipeKeyboard();
+            _swipeLine = new SwipeLine(word.WordString);
             _selectionInterpolation = 0;
         }
 
@@ -44,12 +46,14 @@ namespace ggj20
                 _selectionInterpolation = _selectionInterpolation - (float)gameTime.ElapsedGameTime.TotalSeconds / SELECTION_ANIMATION_DURATION;
                 _selectionInterpolation = Math.Max(0f, _selectionInterpolation);
             }
+
+            _swipeLine.Update(gameTime, _centerPosition);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             _underlyingKeyboard.Draw(spriteBatch, _selectionInterpolation, _centerPosition);
-            spriteBatch.DrawString(StyleSheet.DefaultFont, _selectionInterpolation.ToString(), VirtualCoords.ComputePixelPosition(_centerPosition), Color.Red);
+            _swipeLine.Draw(spriteBatch, _selectionInterpolation, _centerPosition);
         }
     }
 }

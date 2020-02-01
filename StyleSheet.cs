@@ -22,7 +22,7 @@ namespace ggj20
         }
 
         public static readonly Color ClearColor = new Color(5,5,10);
-        public static readonly Color BackgroundColor = Color.LightBlue;
+        public static readonly Color BackgroundColor = Color.DeepSkyBlue;
 
         public static Color HighlightColor
         {

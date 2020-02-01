@@ -22,7 +22,7 @@ namespace ggj20
         }
         private static Point fieldSize_pixel;
 
-        private static int FieldPixelSizeMin
+        public static int FieldPixelSizeMin
         {
             get { return Math.Min(fieldSize_pixel.X, fieldSize_pixel.Y);  }
         }
@@ -86,20 +86,14 @@ namespace ggj20
         /// <param name="uniformSize">uniform size in relative game cord</param>
         public static Rectangle ComputePixelRect_Centered(Vector2 position, float uniformSize)
         {
-            return ComputePixelRect_Centered(position, new Vector2(uniformSize / RELATIVECOR_ASPECT_RATIO, uniformSize));
+            return ComputePixelRect_Centered(position, new Vector2(uniformSize, uniformSize));
         }
 
         public static Rectangle ComputePixelRect_Centered(Vector2 position, Vector2 size)
         {
-            int rectSizeX = (int)(size.X * fieldSize_pixel.X + 0.5f);
-            int halfSizeX = rectSizeX / 2;
-            int rectSizeY = (int)(size.Y * fieldSize_pixel.Y + 0.5f);
-            int halfSizeY = rectSizeY / 2;
-
-            int rectx = (int)(position.X / RELATIVE_MAX.X * FieldPixelSize.X + FieldPixelOffset.X);
-            int recty = (int)(position.Y / RELATIVE_MAX.Y * FieldPixelSize.Y + FieldPixelOffset.Y);
-            
-            return new Rectangle(rectx - halfSizeX, recty - halfSizeY, rectSizeX, rectSizeY);
+            Vector2 outSize = ComputePixelScale(size) + new Vector2(0.5f);
+            Vector2 outpos = ComputePixelPosition(position) - outSize * 0.5f + new Vector2(0.5f);
+            return new Rectangle((int)outpos.X, (int)outpos.Y, (int)outSize.X, (int)outSize.Y);
         }
         
         public static void OnResize(Point windowSize)
