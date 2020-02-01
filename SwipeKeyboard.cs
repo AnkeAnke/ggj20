@@ -27,8 +27,7 @@ namespace ggj20
 
             Rectangle screenRect = VirtualCoords.ComputePixelRect(corner, size);
             Color offColor = StyleSheet.BackgroundColor;
-            offColor.A = 0;
-            Color color = Color.Lerp(offColor, StyleSheet.BackgroundColor, selectionInterpolation);
+            Color color = offColor * selectionInterpolation;
             spriteBatch.Draw(StyleSheet.KeyboardTexture, screenRect, color);
         }
 

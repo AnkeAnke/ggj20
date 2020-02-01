@@ -50,7 +50,7 @@ namespace ggj20
         {
             GraphicsDevice.Clear(StyleSheet.ClearColor);
 
-            _spriteBatch.Begin(blendState: BlendState.NonPremultiplied);
+            _spriteBatch.Begin(blendState: BlendState.Additive);
             _activeLevel.Draw(_spriteBatch);
             _spriteBatch.End();
 
