@@ -22,21 +22,21 @@ namespace ggj20
             
             // UNIT TEST
             var testWord = "princess";
-            var testSwipePattern = new float[SwipeKeyboard.LETTER_POSITIONS.Length, testWord.Length];
-            for (int li = 0; li < testWord.Length; ++li)
-            {
-                testSwipePattern[char.ToLower(testWord[li]) - 'a', li] = 1.0f;
-            }
-            Debug.Assert(ClosestWordToSwipePattern(testSwipePattern) == testWord);
+            Debug.Assert(ClosestWordToSwipePattern(SwipeKeyboard.WordToSwipePositions(testWord).ToArray()) == testWord);
 
             //=foreach(var sentence in ComputeSentenceVariations("the 0princess is in another 1castle"))
             //    Console.WriteLine(sentence.Item1, sentence.Item2);
         }
 
-        public string ClosestWordToSwipePattern(float[,] swipePattern)
+        public string ClosestWordToSwipePattern(Vector2[] swipePositions) => ClosestWordsToSwipePattern(swipePositions).First();
+        
+        private IEnumerable<string> ClosestWordsToSwipePattern(Vector2[] swipePositions)
         {
-            return ClosestWordsToSwipePattern(swipePattern).First();
+            return _wordsByLength[swipePositions.Length].OrderBy(word => 
+                SwipeKeyboard.SwipePositionToWordDistance(word, swipePositions)
+            );
         }
+        
         public float SwipePatternDifference(IEnumerable<Vector2> swipePatternPositionsA, IEnumerable<Vector2> swipePatternPositionsB) =>
             swipePatternPositionsA.Zip(swipePatternPositionsB)
                 .Select(tuple => (tuple.First - tuple.Second).LengthSquared()).Sum();
@@ -107,14 +107,6 @@ namespace ggj20
                     }
                 }
             }
-        }
-
-        private IEnumerable<string> ClosestWordsToSwipePattern(float[,] swipePattern)
-        {
-            var wordLength = swipePattern.GetLength(1);
-            return _wordsByLength[wordLength].OrderByDescending(word => 
-                word.Select((letter, letterIndex) => swipePattern[char.ToLower(letter) - 'a', letterIndex]).Sum()
-                );
         }
     }
 }

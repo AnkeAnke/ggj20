@@ -30,13 +30,13 @@ namespace ggj20
             _associatedWord = word;
             _centerPosition = center;
             _underlyingKeyboard = new SwipeKeyboard();
-            _swipeLine = new SwipeLine(word.WordString);
+            _swipeLine = new SwipeLine(word.OriginalWord);
             _selectionInterpolation = 0;
 
             OriginalConfiguration = SwipeKeyboard.WordToSwipePositions(_associatedWord.OriginalWord).ToArray();
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, Dictionary dictionary)
         {
             var mouseState = Mouse.GetState();
             SwipeKeyboard.GetBoundingBox(_centerPosition, out Vector2 cornerKeyboard, out Vector2 sizeKeyboard);
@@ -54,6 +54,8 @@ namespace ggj20
             }
 
             _swipeLine.Update(gameTime, _centerPosition);
+
+            _associatedWord.ActiveWord = dictionary.ClosestWordToSwipePattern(_swipeLine.HandlePositionsRelative);
         }
 
         public void Draw(SpriteBatch spriteBatch)

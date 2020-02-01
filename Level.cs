@@ -20,7 +20,7 @@ namespace ggj20
         {
         }
 
-        private string CurrentSentence => string.Join(' ', _words.Select(w => w.WordString).ToArray());
+        private string CurrentSentence => string.Join(' ', _words.Select(w => w.ActiveWord).ToArray());
 
         public void LoadLevel(string filename)
         {
@@ -44,7 +44,7 @@ namespace ggj20
             }
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, Dictionary dictionary)
         {
             // space out the words
             {
@@ -62,7 +62,7 @@ namespace ggj20
             foreach (var word in _words)
                 word.Update();
             foreach (var constellation in _constellations)
-                constellation?.Update(gameTime);
+                constellation?.Update(gameTime, dictionary);
         }
 
         public void Draw(SpriteBatch spriteBatch)

@@ -5,19 +5,18 @@ using Microsoft.Xna.Framework.Graphics;
 namespace ggj20
 {
     public class Word
-    {
-        public string WordString => _word;
-        private string _word;
+    { 
+        public string ActiveWord;
         public readonly string OriginalWord;
 
         public float WordWidth { get; private set; }
 
         public Vector2 CenterPosition { get; set; }
         
-        public Word(string word)
+        public Word(string activeWord)
         {
-            OriginalWord = _word;
-            _word = word;
+            OriginalWord = activeWord;
+            ActiveWord = activeWord;
         }
 
         private float _temporaryScaling = 1.0f;
@@ -25,18 +24,18 @@ namespace ggj20
         
         public void Update()
         {
-            var unscaledPixelSize = StyleSheet.DefaultFont.MeasureString(_word);
+            var unscaledPixelSize = StyleSheet.DefaultFont.MeasureString(ActiveWord);
             WordWidth = unscaledPixelSize.X * StyleSheet.ScalingFontToWorld * _temporaryScaling;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.DrawString(StyleSheet.DefaultFont,
-                text: _word,
+                text: ActiveWord,
                 position: VirtualCoords.ComputePixelPosition(CenterPosition),
                 color: Color.White, 
                 rotation: 0.0f,
-                origin: StyleSheet.DefaultFont.MeasureString(_word) * 0.5f,
+                origin: StyleSheet.DefaultFont.MeasureString(ActiveWord) * 0.5f,
                 scale: VirtualCoords.ComputePixelScale(StyleSheet.ScalingFontToWorld * _temporaryScaling),
                 effects: SpriteEffects.None,
                 layerDepth: 0.0f);

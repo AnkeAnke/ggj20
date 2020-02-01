@@ -41,6 +41,13 @@ namespace ggj20
             corner = new Vector2(centerPosition.X - size.X * 0.5f, centerPosition.Y - size.Y * 0.5f);
         }
 
+        public static float SwipePositionToWordDistance(string word, Vector2[] positions)
+        {
+            Debug.Assert(word.Length == positions.Length);
+            return word.Zip(positions)
+                .Sum(tuple => (LETTER_POSITIONS[char.ToLower(tuple.First) - 'a'] - tuple.Second).LengthSquared());
+        }
+        
         public static IEnumerable<Vector2> WordToSwipePositions(string word) => 
             word.Select(l => SwipeKeyboard.LETTER_POSITIONS[char.ToLower(l) - 'a']);
 

@@ -45,7 +45,7 @@ namespace ggj20
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             
-            _activeLevel.Update(gameTime);
+            _activeLevel.Update(gameTime, _dictionary);
             
             // compute current score
             float score = _activeLevel.ActiveConstellations.Sum(
