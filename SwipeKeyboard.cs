@@ -22,15 +22,23 @@ namespace ggj20
         public void Draw(SpriteBatch spriteBatch, float selectionInterpolation, Vector2 centerPosition)
         {
             // Hidden if not selected.
-            // if (selectionInterpolation == 0) return;
-            
-            Vector2 size = new Vector2(Constellation.CONSTELLATION_WIDTH, 0);
-            float scale  = size.X / StyleSheet.KeyboardTexture.Width;
-            size.Y       = StyleSheet.KeyboardTexture.Height * scale;
+            if (selectionInterpolation == 0) return;
+            GetBoundingBox(centerPosition, out Vector2 corner, out Vector2 size);
 
-            Vector2 corner = new Vector2(centerPosition.X - size.X*0.5f, centerPosition.Y - size.Y*0.5f);
             Rectangle screenRect = VirtualCoords.ComputePixelRect(corner, size);
-            spriteBatch.Draw(StyleSheet.KeyboardTexture, screenRect, StyleSheet.BackgroundColor);
+            Color offColor = StyleSheet.BackgroundColor;
+            offColor.A = 0;
+            Color color = Color.Lerp(offColor, StyleSheet.BackgroundColor, selectionInterpolation);
+            spriteBatch.Draw(StyleSheet.KeyboardTexture, screenRect, color);
+        }
+
+        public static void GetBoundingBox(Vector2 centerPosition, out Vector2 corner, out Vector2 size)
+        {
+            size = new Vector2(Constellation.CONSTELLATION_WIDTH, 0);
+            float scale = size.X / StyleSheet.KeyboardTexture.Width;
+            size.Y = StyleSheet.KeyboardTexture.Height * scale;
+
+            corner = new Vector2(centerPosition.X - size.X * 0.5f, centerPosition.Y - size.Y * 0.5f);
         }
 
         public void GetLetterDistances(Vector2 position, float[] letterDists)

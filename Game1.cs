@@ -25,7 +25,6 @@ namespace ggj20
         protected override void Initialize()
         {
             VirtualCoords.OnResize(new Point(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
-            //this.Window.ClientBounds.Size);
             Window.ClientSizeChanged += (sender, args) => VirtualCoords.OnResize(this.Window.ClientBounds.Size);
             base.Initialize();
         }
@@ -51,7 +50,7 @@ namespace ggj20
         {
             GraphicsDevice.Clear(StyleSheet.BackgroundColor);
 
-            _spriteBatch.Begin();
+            _spriteBatch.Begin(blendState: BlendState.NonPremultiplied);
             _activeLevel.Draw(_spriteBatch);
             _spriteBatch.End();
 

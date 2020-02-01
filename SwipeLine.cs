@@ -1,3 +1,5 @@
+using System.Numerics;
+
 namespace ggj20
 {
     /// <summary>
@@ -8,8 +10,12 @@ namespace ggj20
     /// </summary>
     public class SwipeLine
     {
-        void ConfigureStartSet(string startConfiguration)
+        private string _startConfiguration;
+        public Vector2[] Handles { get; private set; }
+
+        SwipeLine(string startConfiguration)
         {
+            _startConfiguration = startConfiguration;
             
         }
     }
