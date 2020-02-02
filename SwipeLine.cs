@@ -17,6 +17,7 @@ namespace ggj20
         private static readonly float BASE_STAR_SIZE = 0.01f;
         private static readonly float SELECTED_STAR_SIZE = 0.02f;
         private static readonly float BASE_LINE_THICKNESS = 0.005f;
+        private static readonly float BASE_LINE_DASH = 0.007f;
         private static readonly float SELECTION_ANIMATION_DURATION = 0.3f;
         private string _startConfiguration;
         private float[] _selectIntepolationHandles;
@@ -48,23 +49,39 @@ namespace ggj20
         {
             SwipeKeyboard.GetBoundingBox(centerPosition, out Vector2 cornerKeyboard, out Vector2 sizeKeyboard);
             Rectangle rectKeyboard = VirtualCoords.ComputePixelRect(cornerKeyboard, sizeKeyboard);
+
+            float thicknessScaled = VirtualCoords.ComputePixelScale(BASE_LINE_THICKNESS);
+            float dashLengthScaled = VirtualCoords.ComputePixelScale(BASE_LINE_DASH * selectionInterpolation);
+            float dashTotalScaled = VirtualCoords.ComputePixelScale(BASE_LINE_DASH);
+            float radiusScaled = VirtualCoords.ComputePixelScale(BASE_LINE_THICKNESS);
             for (int h = 0; h < Length; ++h)
             {
-                float radius = MathHelper.Lerp(BASE_STAR_SIZE, SELECTED_STAR_SIZE, _selectIntepolationHandles[h]);
 
-                Color color = Color.Lerp(StyleSheet.BackgroundColor, StyleSheet.HighlightColor, selectionInterpolation);
-
-
-                float thicknessScaled = VirtualCoords.ComputePixelScale(BASE_LINE_THICKNESS);
                 if (h > 0)
                 {
-                    Vector2 pos0 = HandlePositionsRelative[h - 1] * rectKeyboard.Width + new Vector2(rectKeyboard.X, rectKeyboard.Y);
-                    Vector2 pos1 = HandlePositionsRelative[h] * rectKeyboard.Width + new Vector2(rectKeyboard.X, rectKeyboard.Y);
-                    LineRendering.DrawLine(spriteBatch, pos0, pos1, Color.Red, thicknessScaled);
+                    Vector2 pos0 = OriginalHandlePositionsRelative[h - 1] * rectKeyboard.Width + new Vector2(rectKeyboard.X, rectKeyboard.Y);
+                    Vector2 pos1 = OriginalHandlePositionsRelative[h]     * rectKeyboard.Width + new Vector2(rectKeyboard.X, rectKeyboard.Y);
+                    LineRendering.DrawLineDashed(spriteBatch, pos0, pos1, StyleSheet.BackgroundColor * selectionInterpolation, dashLengthScaled, dashTotalScaled * 2 - dashLengthScaled,
+                                                 thicknessScaled * 0.7f, radiusScaled * 1.2f, radiusScaled * 1.2f);
                 }
 
                 DrawFromRelative(spriteBatch, rectKeyboard, StyleSheet.DotTexture,
-                                 StyleSheet.BackgroundColor * selectionInterpolation, OriginalHandlePositionsRelative[h], BASE_LINE_THICKNESS * 2, 0);
+                                 StyleSheet.BackgroundColor * selectionInterpolation, OriginalHandlePositionsRelative[h], BASE_LINE_THICKNESS * 1.5f, 0);
+
+            }
+
+            for (int h = 0; h < Length; ++h)
+            {
+                Color color = Color.Lerp(StyleSheet.BackgroundColor, StyleSheet.HighlightColor, selectionInterpolation);
+                float radius = MathHelper.Lerp(BASE_STAR_SIZE, SELECTED_STAR_SIZE, _selectIntepolationHandles[h]);
+
+                if (h > 0)
+                {
+                    Vector2 pos0 = HandlePositionsRelative[h - 1] * rectKeyboard.Width + new Vector2(rectKeyboard.X, rectKeyboard.Y);
+                    Vector2 pos1 = HandlePositionsRelative[h]     * rectKeyboard.Width + new Vector2(rectKeyboard.X, rectKeyboard.Y);
+                    LineRendering.DrawLineDashed(spriteBatch, pos0, pos1, color * (0.5f + 0.5f * selectionInterpolation), dashTotalScaled + dashLengthScaled, dashTotalScaled - dashLengthScaled,
+                                                 thicknessScaled, radiusScaled * 2f, radiusScaled * 2f);
+                }
 
                 DrawFromRelative(spriteBatch, rectKeyboard, StyleSheet.StarTexture,
                                  color, HandlePositionsRelative[h], radius * 2, _selectIntepolationHandles[h] + selectionInterpolation + h);

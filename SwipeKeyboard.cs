@@ -27,7 +27,7 @@ namespace ggj20
             GetBoundingBox(centerPosition, out Vector2 corner, out Vector2 size);
 
             Rectangle screenRect = VirtualCoords.ComputePixelRect(corner, size);
-            Color offColor = StyleSheet.BackgroundColor;
+            Color offColor = StyleSheet.BackgroundColor * 0.5f;
             Color color = offColor * selectionInterpolation * 0.2f;
             spriteBatch.Draw(StyleSheet.KeyboardTexture, screenRect, color);
         }

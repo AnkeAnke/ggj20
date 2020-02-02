@@ -28,15 +28,16 @@ namespace ggj20
             Vector2 dirNormal = (point2 - point1);
             dirNormal.Normalize();
 
-            int numDashes = (int)Math.Ceiling(2.0f * (distance - dashLength) / (dashLength + dashDist));
+            int numDashes = (int)Math.Ceiling((distance - dashLength) / (2.0f * (dashLength + dashDist)));
             numDashes *= 2;
-            float distOffset = (distance - (numDashes * (dashLength + dashDist) + dashLength)) * 0.5f + offsetBegin;
+            float distOffset = (distance - ((dashLength + dashDist) * numDashes + dashLength)) * 0.5f + offsetBegin;
+            numDashes++;
             for (int d = 0; d < numDashes; ++d)
             {
-                float distFrom = Math.Max(0f, distOffset);
-                float distTo = Math.Min(distance, distOffset);
+                float distFrom = Math.Max(offsetBegin, distOffset);
+                float distTo = Math.Min(distance + offsetBegin, distOffset + dashLength);
                 float scale = distTo - distFrom;
-                Vector2 dashFrom = point1 + dirNormal * scale;
+                Vector2 dashFrom = point1 + dirNormal * distFrom;
                 DrawLine(spriteBatch, dashFrom, scale, angle, color, thickness);
                 distOffset += dashLength + dashDist;
             }
