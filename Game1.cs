@@ -67,6 +67,8 @@ namespace ggj20
                     _dictionary.SwipePatternDifference(constellation.ActiveConfiguration, constellation.OriginalConfiguration)
             );
             _currentSwipeErrorAllowedPercentage = Math.Max(0.0f, 1.0f - _currentSwipeError / _activeLevel.MaxSwipeError);
+            if (_activeLevel.CurrentSentence == _activeLevel.OriginalSentence)
+                _currentSwipeErrorAllowedPercentage = 0.0f;
 
             if (_currentState == State.Playing)
             {

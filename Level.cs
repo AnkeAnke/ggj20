@@ -23,7 +23,8 @@ namespace ggj20
         {
         }
 
-        private string CurrentSentence => string.Join(' ', _words.Select(w => w.ActiveWord).ToArray());
+        public string CurrentSentence => string.Join(' ', _words.Select(w => w.ActiveWord).ToArray());
+        public string OriginalSentence => string.Join(' ', _words.Select(w => w.OriginalWord).ToArray());
         
         public int CurrentSentenceRating => _ratingTable.TryGetValue(CurrentSentence.ToLower(), out var rating) ? rating : 0;
 
