@@ -27,7 +27,7 @@ namespace ggj20
             GetBoundingBox(centerPosition, out Vector2 corner, out Vector2 size);
 
             Rectangle screenRect = VirtualCoords.ComputePixelRect(corner, size);
-            Color color = StyleSheet.BackgroundColor * 0.5f;
+            Color color = StyleSheet.BackgroundColor * 0.4f;
             color.A = 255;
             color *= selectionInterpolation;
             Color letterColor = Color.Black * selectionInterpolation;

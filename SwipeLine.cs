@@ -62,11 +62,11 @@ namespace ggj20
                     Vector2 pos0 = OriginalHandlePositionsRelative[h - 1] * rectKeyboard.Width + new Vector2(rectKeyboard.X, rectKeyboard.Y);
                     Vector2 pos1 = OriginalHandlePositionsRelative[h]     * rectKeyboard.Width + new Vector2(rectKeyboard.X, rectKeyboard.Y);
                     LineRendering.DrawLineDashed(spriteBatch, pos0, pos1, StyleSheet.BackgroundColor * selectionInterpolation, dashLengthScaled, dashTotalScaled * 2 - dashLengthScaled,
-                                                 thicknessScaled * 0.7f, radiusScaled * 1.2f, radiusScaled * 1.2f);
+                                                 thicknessScaled * 0.7f, radiusScaled * 2f, radiusScaled * 2f);
                 }
 
-                DrawFromRelative(spriteBatch, rectKeyboard, StyleSheet.DotTexture,
-                                 StyleSheet.BackgroundColor * selectionInterpolation, OriginalHandlePositionsRelative[h], BASE_LINE_THICKNESS * 1.5f, 0);
+                //DrawFromRelative(spriteBatch, rectKeyboard, StyleSheet.DotTexture,
+                //                 StyleSheet.BackgroundColor * selectionInterpolation, OriginalHandlePositionsRelative[h], BASE_LINE_THICKNESS * 1.5f, 0);
 
             }
 
