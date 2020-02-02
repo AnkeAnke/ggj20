@@ -55,7 +55,7 @@ namespace ggj20
             // load sentence ratings
             foreach (var ratingString in lines.Skip(2))
             {
-                var parts = ratingString.Split(' ');
+                var parts = ratingString.Trim().Split(' ');
                 var rating = int.Parse(parts[0]);
                 var ratedSentence = string.Join(' ', parts.Skip(1));
                 _ratingTable.Add(ratedSentence.ToLower(), rating);

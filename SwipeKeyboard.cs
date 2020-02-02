@@ -17,7 +17,7 @@ namespace ggj20
     /// * Can tell letter distance for a point
     /// </summary>
 
-    class SwipeKeyboard
+    public class SwipeKeyboard
     {
 
         public void Draw(SpriteBatch spriteBatch, float selectionInterpolation, Vector2 centerPosition)

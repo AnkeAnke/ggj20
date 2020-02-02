@@ -16,6 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Content\level3.lvl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Content\level1.lvl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
