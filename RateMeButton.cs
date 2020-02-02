@@ -34,7 +34,8 @@ namespace ggj20
             {
                 var size = MathHelper.Lerp(sparcleMinSize, sparcleMaxSize, (float)rand.NextDouble());
                 
-                var pos = new Vector2(MathF.Sqrt((float)rand.NextDouble()), (float)rand.NextDouble());
+                var randquad = new Vector2(MathF.Sqrt((float)rand.NextDouble()), (float)rand.NextDouble());
+                var pos = randquad;
                 
                 // spiky to the right
                 pos *= new Vector2(1.0f, 1.0f - pos.X * 0.8f);
@@ -44,12 +45,12 @@ namespace ggj20
                 pos *= new Vector2(Size * StyleSheet.ShootingTailTexture.Width / StyleSheet.ShootingTailTexture.Height, Size);
                 pos -= new Vector2(Size * StyleSheet.ShootingTailTexture.Width / StyleSheet.ShootingTailTexture.Height * 0.5f + 0.05f, 0.005f);
                 pos += _centerPosition;
-                
+
                 sparcles.Add(new Sparcle()
                 {
                     Position = pos,
                     Size = size,
-                    Color = Color.White * ((float)rand.NextDouble() * 0.8f + 0.1f)
+                    Color = Color.White * ((float)rand.NextDouble() * 0.8f + 0.1f) * MathF.Pow(randquad.Y * 0.5f + 0.5f, 0.4f)
                 });
             }
         }
