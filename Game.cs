@@ -37,7 +37,7 @@ namespace ggj20
             _graphics.PreferredBackBufferHeight = 1000;   // set this value to the desired height of your window
             _graphics.ApplyChanges();
             _activeLevel = new Level();
-            _rateMeButton = new RateMeButton();
+            
         }
 
         protected override void Initialize()
@@ -55,6 +55,7 @@ namespace ggj20
             StyleSheet.LoadContent(Content);
             _activeLevel = new Level();
             _activeLevel.LoadLevel(levelNames[currentLevel]);
+            _rateMeButton = new RateMeButton();
         }
 
         protected override void Update(GameTime gameTime)
@@ -71,25 +72,29 @@ namespace ggj20
                     _dictionary.SwipePatternDifference(constellation.ActiveConfiguration, constellation.OriginalConfiguration)
             );
             _currentSwipeErrorAllowedPercentage = Math.Max(0.0f, 1.0f - _currentSwipeError / _activeLevel.MaxSwipeError);
-            if (_activeLevel.CurrentSentence == _activeLevel.OriginalSentence)
-                _currentSwipeErrorAllowedPercentage = 0.0f;
+            //if (_activeLevel.CurrentSentence == _activeLevel.OriginalSentence)
+            //    _currentSwipeErrorAllowedPercentage = 0.0f;
 
             _rateMeButton.Update();
-            switch (_currentState)
+            if (_rateMeButton.IsPressed && _activeLevel.CurrentSentence != _activeLevel.OriginalSentence &&
+                _currentSwipeErrorAllowedPercentage > 0.01f)
             {
-                case State.Playing when _rateMeButton.IsPressed:
+                switch (_currentState)
                 {
-                    _currentState = State.Rating;
-                    break;
-                }
-                case State.Rating when _rateMeButton.IsPressed:
-                {
-                    if (_activeLevel.CurrentSentenceRating >= 2)
-                        currentLevel = (currentLevel + 1) % levelNames.Length;
-                    _activeLevel = new Level();
-                    _activeLevel.LoadLevel(levelNames[currentLevel]);
-                    _currentState = State.Playing;
-                    break;
+                    case State.Playing:
+                    {
+                        _currentState = State.Rating;
+                        break;
+                    }
+                    case State.Rating:
+                    {
+                        if (_activeLevel.CurrentSentenceRating >= 2)
+                            currentLevel = (currentLevel + 1) % levelNames.Length;
+                        _activeLevel = new Level();
+                        _activeLevel.LoadLevel(levelNames[currentLevel]);
+                        _currentState = State.Playing;
+                        break;
+                    }
                 }
             }
 
@@ -147,7 +152,7 @@ namespace ggj20
             _activeLevel.Draw(_spriteBatch, _currentState);
             
             
-            _rateMeButton.Draw(_spriteBatch, _currentSwipeErrorAllowedPercentage);
+            _rateMeButton.Draw(_spriteBatch, _currentSwipeErrorAllowedPercentage, _activeLevel.CurrentSentence != _activeLevel.OriginalSentence);
             if (_currentState == State.Rating)
             {
                 DrawRatingStars();
