@@ -15,6 +15,8 @@ namespace ggj20
         public IEnumerable<Constellation> ActiveConstellations => _constellations.Where(c => c != null); 
         private Constellation[] _constellations;
         private Word[] _words;
+        
+        public float MaxSwipeError { get; private set; }
 
         public Level()
         {
@@ -42,6 +44,11 @@ namespace ggj20
                     _constellations[constellationNumber] = new Constellation(_words[i], CONSTELLATION_CENTERS[constellationNumber]);
                 }
             }
+            
+            // load MaxSwipeError
+            MaxSwipeError = float.Parse(lines[1]);
+            
+            // TODO load sentence ratings
         }
 
         public void Update(GameTime gameTime, Dictionary dictionary)

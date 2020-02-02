@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,6 +14,9 @@ namespace ggj20
         private Level _activeLevel;
         private Dictionary _dictionary;
         private RateMeButton _rateMeButton;
+        
+        private float _currentSwipeError;
+        private float _currentSwipeErrorAllowedPercentage;
 
         public Game1()
         {
@@ -50,10 +54,11 @@ namespace ggj20
             _activeLevel.Update(gameTime, _dictionary);
             
             // compute current score
-            float score = _activeLevel.ActiveConstellations.Sum(
+            _currentSwipeError = _activeLevel.ActiveConstellations.Sum(
                 constellation =>
                     _dictionary.SwipePatternDifference(constellation.ActiveConfiguration, constellation.OriginalConfiguration)
             );
+            _currentSwipeErrorAllowedPercentage = Math.Max(0.0f, 1.0f - _currentSwipeError / _activeLevel.MaxSwipeError);
             
             _rateMeButton.Update();
 
@@ -66,7 +71,7 @@ namespace ggj20
 
             _spriteBatch.Begin(blendState: BlendState.AlphaBlend);
             _activeLevel.Draw(_spriteBatch);
-            _rateMeButton.Draw(_spriteBatch);
+            _rateMeButton.Draw(_spriteBatch, _currentSwipeErrorAllowedPercentage);
             _spriteBatch.End();
 
             base.Draw(gameTime);

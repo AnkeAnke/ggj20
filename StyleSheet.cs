@@ -23,6 +23,9 @@ namespace ggj20
         public static Texture2D KeyboardTexture { get; private set; }
 
         public static Texture2D StarTexture { get; private set; }
+        public static Texture2D ShootingStarTexture { get; private set; }
+        public static Texture2D ShootingTailTexture { get; private set; }
+        public static Texture2D ShootingButtonTexture { get; private set; }
 
         public static Texture2D LineTexture { get; private set; }
 
@@ -35,6 +38,10 @@ namespace ggj20
             DefaultFont     = content.Load<SpriteFont>("DefaultFont");
             LineTexture     = content.Load<Texture2D>("Keyboard/line");
             DotTexture      = content.Load<Texture2D>("Keyboard/circle");
+            ShootingStarTexture = content.Load<Texture2D>("ShootingStar/shootingStar");
+            ShootingTailTexture = content.Load<Texture2D>("ShootingStar/shootingTail");
+            ShootingButtonTexture = content.Load<Texture2D>("ShootingStar/shootingButtonWhite");
+
             ScalingFontToWorld = TEXT_HEIGHT / DefaultFont.MeasureString("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").Y;
             HighlightColor = Color.White;
         }
