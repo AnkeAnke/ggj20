@@ -62,6 +62,7 @@ namespace ggj20
         {
             _underlyingKeyboard.Draw(spriteBatch, _selectionInterpolation, _centerPosition);
             _swipeLine.Draw(spriteBatch, _selectionInterpolation, _centerPosition);
+            _underlyingKeyboard.DrawLetters(spriteBatch, _selectionInterpolation, _centerPosition);
         }
     }
 }

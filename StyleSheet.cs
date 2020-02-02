@@ -22,6 +22,8 @@ namespace ggj20
 
         public static Texture2D KeyboardTexture { get; private set; }
 
+        public static Texture2D LettersTexture { get; private set; }
+
         public static Texture2D StarTexture { get; private set; }
         public static Texture2D ShootingStarTexture { get; private set; }
         public static Texture2D ShootingTailTexture { get; private set; }
@@ -34,6 +36,7 @@ namespace ggj20
         public static void LoadContent(ContentManager content)
         {
             KeyboardTexture = content.Load<Texture2D>("Keyboard/keyboard");
+            LettersTexture  = content.Load<Texture2D>("Keyboard/letters");
             StarTexture     = content.Load<Texture2D>("Keyboard/star");
             DefaultFont     = content.Load<SpriteFont>("DefaultFont");
             LineTexture     = content.Load<Texture2D>("Keyboard/line");

@@ -27,9 +27,25 @@ namespace ggj20
             GetBoundingBox(centerPosition, out Vector2 corner, out Vector2 size);
 
             Rectangle screenRect = VirtualCoords.ComputePixelRect(corner, size);
-            Color offColor = StyleSheet.BackgroundColor * 0.5f;
-            Color color = offColor * selectionInterpolation * 0.2f;
+            Color color = StyleSheet.BackgroundColor * 0.5f;
+            color.A = 255;
+            color *= selectionInterpolation;
+            Color letterColor = Color.Black * selectionInterpolation;
             spriteBatch.Draw(StyleSheet.KeyboardTexture, screenRect, color);
+        }
+
+        public void DrawLetters(SpriteBatch spriteBatch, float selectionInterpolation, Vector2 centerPosition)
+        {
+            // Hidden if not selected.
+            if (selectionInterpolation == 0) return;
+            GetBoundingBox(centerPosition, out Vector2 corner, out Vector2 size);
+
+            Rectangle screenRect = VirtualCoords.ComputePixelRect(corner, size);
+            Color color = StyleSheet.BackgroundColor * 0.2f;
+            color.A = 255;
+            color *= selectionInterpolation;
+            //Color letterColor = Color.Black * selectionInterpolation;
+            spriteBatch.Draw(StyleSheet.LettersTexture, screenRect, color);
         }
 
         public static void GetBoundingBox(Vector2 centerPosition, out Vector2 corner, out Vector2 size)
