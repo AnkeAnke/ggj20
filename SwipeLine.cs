@@ -15,13 +15,15 @@ namespace ggj20
     public class SwipeLine
     {
         private static readonly float BASE_STAR_SIZE = 0.01f;
-        private static readonly float SELECTED_STAR_SIZE = 0.03f;
+        private static readonly float SELECTED_STAR_SIZE = 0.02f;
+        private static readonly float BASE_LINE_THICKNESS = 0.005f;
         private static readonly float SELECTION_ANIMATION_DURATION = 0.3f;
         private string _startConfiguration;
         private float[] _selectIntepolationHandles;
         private int _selectedHandle = -1;
         private Point _selectedLastMousePos;
         public Vector2[] HandlePositionsRelative { get; private set; }
+        public Vector2[] OriginalHandlePositionsRelative { get; private set; }
         public int Length
         {
             get { return _startConfiguration.Length; }
@@ -39,6 +41,7 @@ namespace ggj20
                 HandlePositionsRelative[h] = SwipeKeyboard.LETTER_POSITIONS[letter - 'a'];
                 _selectIntepolationHandles[h] = 0;
             }
+            OriginalHandlePositionsRelative = (Vector2[])HandlePositionsRelative.Clone();
         }
 
         public void Draw(SpriteBatch spriteBatch, float selectionInterpolation, Vector2 centerPosition)
@@ -48,22 +51,47 @@ namespace ggj20
             for (int h = 0; h < Length; ++h)
             {
                 float radius = MathHelper.Lerp(BASE_STAR_SIZE, SELECTED_STAR_SIZE, _selectIntepolationHandles[h]);
-                float radiusScaled = VirtualCoords.ComputePixelScale(radius);
 
-                Point cornerStar = new Point((int)(rectKeyboard.X + rectKeyboard.Width * HandlePositionsRelative[h].X - radiusScaled + 0.5f)
-                                           , (int)(rectKeyboard.Y + rectKeyboard.Width * HandlePositionsRelative[h].Y - radiusScaled + 0.5f));
-                Rectangle starRect = new Rectangle((int)cornerStar.X, (int)cornerStar.Y, (int)radiusScaled * 2, (int)radiusScaled * 2);
-                // Rectangle starRect = VirtualCoords.ComputePixelRect_Centered(Handles[h], radius);
                 Color color = Color.Lerp(StyleSheet.BackgroundColor, StyleSheet.HighlightColor, selectionInterpolation);
 
-                spriteBatch.Draw(
-                    texture: StyleSheet.StarTexture,
-                    destinationRectangle: starRect,
-                    color: color
-                    //rotation: _selectHandles[h],
-                    //origin: new Vector2(radiusScaled * 0.5f, radiusScaled * 0.5f)
-                    );
+
+                float thicknessScaled = VirtualCoords.ComputePixelScale(BASE_LINE_THICKNESS);
+                if (h > 0)
+                {
+                    Vector2 pos0 = HandlePositionsRelative[h - 1] * rectKeyboard.Width + new Vector2(rectKeyboard.X, rectKeyboard.Y);
+                    Vector2 pos1 = HandlePositionsRelative[h] * rectKeyboard.Width + new Vector2(rectKeyboard.X, rectKeyboard.Y);
+                    LineRendering.DrawLine(spriteBatch, pos0, pos1, Color.Red, thicknessScaled);
+                }
+
+                DrawFromRelative(spriteBatch, rectKeyboard, StyleSheet.DotTexture,
+                                 StyleSheet.BackgroundColor * selectionInterpolation, OriginalHandlePositionsRelative[h], BASE_LINE_THICKNESS * 2, 0);
+
+                DrawFromRelative(spriteBatch, rectKeyboard, StyleSheet.StarTexture,
+                                 color, HandlePositionsRelative[h], radius * 2, _selectIntepolationHandles[h] + selectionInterpolation + h);
             }
+        }
+
+        private void GetBoundingBoxFromRelative(Rectangle rectKeyboard, Texture2D texture, Vector2 relativePosition, float sizeX,
+                                                out Vector2 center, out Vector2 scale)
+        {
+            scale = new Vector2(VirtualCoords.ComputePixelScale(sizeX) / texture.Width);
+
+            center = new Vector2(rectKeyboard.X + 0.5f, rectKeyboard.Y + 0.5f) + relativePosition * rectKeyboard.Width;
+        }
+
+        private void DrawFromRelative(SpriteBatch spriteBatch, Rectangle rectKeyboard, Texture2D texture, Color color, Vector2 relativePosition, float sizeX, float rotation)
+        {
+            GetBoundingBoxFromRelative(rectKeyboard, StyleSheet.StarTexture, relativePosition, sizeX, out Vector2 center, out Vector2 scale);
+            spriteBatch.Draw(
+                texture: texture,
+                position: center,
+                sourceRectangle: null,
+                color: color,
+                rotation: rotation,
+                origin: new Vector2(StyleSheet.StarTexture.Width * 0.5f, StyleSheet.StarTexture.Height * 0.5f),
+                scale: scale,
+                effects: SpriteEffects.None,
+                layerDepth: 1);
         }
 
         public void Update(GameTime gameTime, Vector2 centerPosition)
