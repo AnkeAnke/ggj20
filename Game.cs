@@ -7,9 +7,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace ggj20
 {
-    public class Game1 : Game
+    public class Game : Microsoft.Xna.Framework.Game
     {
-        enum State
+        public enum State
         {
             Playing,
             Rating,
@@ -25,7 +25,10 @@ namespace ggj20
         private float _currentSwipeError;
         private float _currentSwipeErrorAllowedPercentage;
 
-        public Game1()
+        private string[] levelNames = new[] {"Content/level1.lvl", "Content/level2.lvl "};
+        private int currentLevel = 0;
+
+        public Game()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -50,7 +53,8 @@ namespace ggj20
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             StyleSheet.LoadContent(Content);
-			_activeLevel.LoadLevel("Content/level1.lvl");
+            _activeLevel = new Level();
+            _activeLevel.LoadLevel(levelNames[currentLevel]);
         }
 
         protected override void Update(GameTime gameTime)
@@ -70,11 +74,23 @@ namespace ggj20
             if (_activeLevel.CurrentSentence == _activeLevel.OriginalSentence)
                 _currentSwipeErrorAllowedPercentage = 0.0f;
 
-            if (_currentState == State.Playing)
+            _rateMeButton.Update();
+            switch (_currentState)
             {
-                _rateMeButton.Update();
-                if (_rateMeButton.IsPressed())
+                case State.Playing when _rateMeButton.IsPressed:
+                {
                     _currentState = State.Rating;
+                    break;
+                }
+                case State.Rating when _rateMeButton.IsPressed:
+                {
+                    if (_activeLevel.CurrentSentenceRating >= 2)
+                        currentLevel = (currentLevel + 1) % levelNames.Length;
+                    _activeLevel = new Level();
+                    _activeLevel.LoadLevel(levelNames[currentLevel]);
+                    _currentState = State.Playing;
+                    break;
+                }
             }
 
             base.Update(gameTime);
@@ -82,24 +98,45 @@ namespace ggj20
 
         private void DrawRatingStars()
         {
-            int rating = _activeLevel.CurrentSentenceRating;
+            var rating = _activeLevel.CurrentSentenceRating;
             if (rating == 0)
-                return; // TODO
-
-            const float ratingStarYOffset = 0.3f;
-            const float ratingStarSize = 0.1f;
-            const float ratingStarSpacing = 0.02f;
-            float totalWidth = ratingStarSize * rating + (rating - 1) * ratingStarSpacing;
-            float currentX = (VirtualCoords.RELATIVE_MAX.X - totalWidth) * 0.5f;
-
-            for (int i = 0; i < rating; ++i)
             {
-                currentX += ratingStarSize * 0.5f;
-                _spriteBatch.Draw(StyleSheet.StarTexture, destinationRectangle:
-                    VirtualCoords.ComputePixelRect_Centered(new Vector2(currentX, ratingStarYOffset), ratingStarSize),
-                    Color.LightYellow);
-                currentX += ratingStarSize * 0.5f + ratingStarSpacing;
+                const float ratingStarYOffset = 0.3f;
+                const float ratingStarSize = 0.1f;
+                const float ratingStarSpacing = 0.02f;
+                var totalWidth = ratingStarSize * rating + (rating - 1) * ratingStarSpacing;
+                var currentX = (VirtualCoords.RELATIVE_MAX.X - totalWidth) * 0.5f;
+
+                for (int i = 0; i < rating; ++i)
+                {
+                    currentX += ratingStarSize * 0.5f;
+                    _spriteBatch.Draw(StyleSheet.StarTexture, destinationRectangle:
+                        VirtualCoords.ComputePixelRect_Centered(new Vector2(currentX, ratingStarYOffset),
+                            ratingStarSize),
+                        Color.LightYellow);
+                    currentX += ratingStarSize * 0.5f + ratingStarSpacing;
+                }
             }
+
+            var text = rating switch
+            {
+                0 => "Are you sure? Try again!",
+                1 => "Better than before, but not good enough!",
+                2 => "Pretty good, on to the next level",
+                3 => "Excellent",
+                _ => ""
+            };
+
+            var centerPos = new Vector2(0.8f, 0.8f);
+            _spriteBatch.DrawString(StyleSheet.DefaultFont,
+                text: text,
+                position: VirtualCoords.ComputePixelPosition(centerPos),
+                color: Color.White, 
+                rotation: 0.0f,
+                origin: StyleSheet.DefaultFont.MeasureString(text) * 0.5f,
+                scale: VirtualCoords.ComputePixelScale(StyleSheet.ScalingFontToWorld),
+                effects: SpriteEffects.None,
+                layerDepth: 0.0f);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -107,11 +144,11 @@ namespace ggj20
             GraphicsDevice.Clear(StyleSheet.ClearColor);
 
             _spriteBatch.Begin(blendState: BlendState.AlphaBlend);
-            _activeLevel.Draw(_spriteBatch);
+            _activeLevel.Draw(_spriteBatch, _currentState);
             
-            if (_currentState == State.Playing)
-                _rateMeButton.Draw(_spriteBatch, _currentSwipeErrorAllowedPercentage);
-            else
+            
+            _rateMeButton.Draw(_spriteBatch, _currentSwipeErrorAllowedPercentage);
+            if (_currentState == State.Rating)
             {
                 DrawRatingStars();
             }

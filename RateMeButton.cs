@@ -8,18 +8,18 @@ namespace ggj20
     {
         private const float Size = 0.1f;
         private readonly Vector2 _centerPosition = new Vector2(0.8f - Size * 0.5f, 0.6f - Size * 0.5f);
+        private ButtonState _mouseStateLastFrame = ButtonState.Released;
+        public bool IsPressed { get; private set; } = false;
 
         public void Update()
-        {
-        }
-        
-        public bool IsPressed()
         {
             var mouseState = Mouse.GetState();
             SwipeKeyboard.GetBoundingBox(_centerPosition, out Vector2 cornerKeyboard, out Vector2 sizeKeyboard);
 
             Rectangle interactRect = DrawArea();
-            return mouseState.LeftButton == ButtonState.Pressed && interactRect.Contains(mouseState.Position);
+            IsPressed = mouseState.LeftButton == ButtonState.Pressed && _mouseStateLastFrame == ButtonState.Released && interactRect.Contains(mouseState.Position);
+
+            _mouseStateLastFrame = mouseState.LeftButton;
         }
 
         private Rectangle DrawArea()

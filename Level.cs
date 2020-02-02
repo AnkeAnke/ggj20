@@ -83,12 +83,16 @@ namespace ggj20
                 constellation?.Update(gameTime, dictionary);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, Game.State currentState)
         {
             foreach (var word in _words)
                 word.Draw(spriteBatch);
-            foreach (var constellation in _constellations)
-                constellation?.Draw(spriteBatch);
+
+            if (currentState == Game.State.Playing)
+            {
+                foreach (var constellation in _constellations)
+                    constellation?.Draw(spriteBatch);
+            }
         }
 
         static readonly Vector2[] CONSTELLATION_CENTERS = new Vector2[]
