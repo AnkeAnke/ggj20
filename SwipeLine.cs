@@ -22,7 +22,7 @@ namespace ggj20
         private string _startConfiguration;
         private float[] _selectIntepolationHandles;
         private int _selectedHandle = -1;
-        private Point _selectedLastMousePos;
+        private MouseState _lastMouseState;
         public Vector2[] HandlePositionsRelative { get; private set; }
         public Vector2[] OriginalHandlePositionsRelative { get; private set; }
         public int Length
@@ -119,46 +119,58 @@ namespace ggj20
             if (_selectedHandle != -1)
             {
                 HandlePositionsRelative[_selectedHandle] = (mouseState.Position - rectKeyboard.Location).ToVector2() / rectKeyboard.Width;
-                _selectedLastMousePos = mouseState.Position;
+            }
+
+            bool clicked  = mouseState.LeftButton == ButtonState.Pressed && _lastMouseState.LeftButton == ButtonState.Released && rectKeyboard.Contains(mouseState.Position);
+            bool released = mouseState.LeftButton == ButtonState.Released && _lastMouseState.LeftButton == ButtonState.Pressed;
+            float radius = SELECTED_STAR_SIZE;
+            float radiusScaled = VirtualCoords.ComputePixelScale(radius);
+            int closestStar = -1;
+
+            if (_selectedHandle == -1 && rectKeyboard.Contains(mouseState.Position))
+            {
+                float minDist = float.MaxValue;
+                for (int h = 0; h < Length; ++h)
+                {
+                    Point centerStar = new Point((int)(rectKeyboard.X + rectKeyboard.Width * HandlePositionsRelative[h].X + 0.5f),
+                            (int)(rectKeyboard.Y + rectKeyboard.Width * HandlePositionsRelative[h].Y + 0.5f));
+                    float distStar = (centerStar - mouseState.Position).ToVector2().Length();
+                    if (minDist > distStar && distStar < radiusScaled)
+                    {
+                        minDist = distStar;
+                        closestStar = h;
+                        if (clicked)
+                            _selectedHandle = h;
+                    }
+                }
             }
 
             for (int h = 0; h < Length; ++h)
             {
-                float radius = SELECTED_STAR_SIZE;
-                float radiusScaled = VirtualCoords.ComputePixelScale(radius);
 
-                Point centerStar = new Point((int)(rectKeyboard.X + rectKeyboard.Width * HandlePositionsRelative[h].X + 0.5f)
-                                           , (int)(rectKeyboard.Y + rectKeyboard.Width * HandlePositionsRelative[h].Y + 0.5f));
+                Point centerStar = new Point((int)(rectKeyboard.X + rectKeyboard.Width * HandlePositionsRelative[h].X + 0.5f),
+                                             (int)(rectKeyboard.Y + rectKeyboard.Width * HandlePositionsRelative[h].Y + 0.5f));
+                if (closestStar == h || _selectedHandle == h)
+                {
+                    _selectIntepolationHandles[h] += (float)gameTime.ElapsedGameTime.TotalSeconds / SELECTION_ANIMATION_DURATION;
+                    _selectIntepolationHandles[h] = Math.Min(1f, _selectIntepolationHandles[h]);
+                }
+                else if (h != closestStar)
+                {
+                    _selectIntepolationHandles[h] -= (float)gameTime.ElapsedGameTime.TotalSeconds / SELECTION_ANIMATION_DURATION;
+                    _selectIntepolationHandles[h] = Math.Max(0f, _selectIntepolationHandles[h]);
+                }
 
-                bool mouseIntersectsStar = (centerStar - mouseState.Position).ToVector2().Length() < radiusScaled;
-
-                if (_selectedHandle == h && !mouseIntersectsStar)
+                if (_selectedHandle == h && released)
                 {
                     _selectedHandle = -1;
-                }
-
-                if (_selectedHandle == -1 && mouseIntersectsStar)
-                {
-                    _selectIntepolationHandles[h] = _selectIntepolationHandles[h]
-                                                    + (float)gameTime.ElapsedGameTime.TotalSeconds * 2.0f / SELECTION_ANIMATION_DURATION;
-                    _selectIntepolationHandles[h] = Math.Min(0.5f, _selectIntepolationHandles[h]);
-
-                    if (mouseState.LeftButton == ButtonState.Pressed)
-                    {
-                        _selectIntepolationHandles[h] = 1;
-                        _selectedHandle = h;
-                    }
-                }
-                else if (!mouseIntersectsStar || _selectedHandle == -1)
-                {
-                    _selectIntepolationHandles[h] = _selectIntepolationHandles[h]
-                                                    - (float)gameTime.ElapsedGameTime.TotalSeconds / SELECTION_ANIMATION_DURATION;
-                    _selectIntepolationHandles[h] = Math.Max(0f, _selectIntepolationHandles[h]);
                 }
             }
 
             if (mouseState.LeftButton != ButtonState.Pressed)
                 _selectedHandle = -1;
+
+            _lastMouseState = mouseState;
         }
     }
 }
