@@ -15,6 +15,7 @@ namespace ggj20
         public IEnumerable<Constellation> ActiveConstellations => _constellations.Where(c => c != null); 
         private Constellation[] _constellations;
         private Word[] _words;
+        private Dictionary<string, int> _ratingTable = new Dictionary<string, int>();
         
         public float MaxSwipeError { get; private set; }
 
@@ -23,6 +24,8 @@ namespace ggj20
         }
 
         private string CurrentSentence => string.Join(' ', _words.Select(w => w.ActiveWord).ToArray());
+        
+        public int CurrentSentenceRating => _ratingTable.TryGetValue(CurrentSentence.ToLower(), out var rating) ? rating : 0;
 
         public void LoadLevel(string filename)
         {
@@ -48,7 +51,14 @@ namespace ggj20
             // load MaxSwipeError
             MaxSwipeError = float.Parse(lines[1]);
             
-            // TODO load sentence ratings
+            // load sentence ratings
+            foreach (var ratingString in lines.Skip(2))
+            {
+                var parts = ratingString.Split(' ');
+                var rating = int.Parse(parts[0]);
+                var ratedSentence = string.Join(' ', parts.Skip(1));
+                _ratingTable.Add(ratedSentence.ToLower(), rating);
+            }
         }
 
         public void Update(GameTime gameTime, Dictionary dictionary)

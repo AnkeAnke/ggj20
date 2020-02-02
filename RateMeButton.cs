@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace ggj20
 {
@@ -12,20 +13,35 @@ namespace ggj20
         {
         }
         
-        public void Draw(SpriteBatch spriteBatch, float swipeErrorAllowedPercentage)
+        public bool IsPressed()
+        {
+            var mouseState = Mouse.GetState();
+            SwipeKeyboard.GetBoundingBox(_centerPosition, out Vector2 cornerKeyboard, out Vector2 sizeKeyboard);
+
+            Rectangle interactRect = DrawArea();
+            return mouseState.LeftButton == ButtonState.Pressed && interactRect.Contains(mouseState.Position);
+        }
+
+        private Rectangle DrawArea()
         {
             var tailAspect = (float) StyleSheet.ShootingTailTexture.Width / StyleSheet.ShootingTailTexture.Height;
             var tailSize = new Vector2(Size * tailAspect, Size);
             var offset = new Vector2(-tailSize.X * 0.5f, 0.0f);
 
-            spriteBatch.Draw(StyleSheet.ShootingTailTexture, destinationRectangle:
-                VirtualCoords.ComputePixelRect(_centerPosition + offset, tailSize),
+            return VirtualCoords.ComputePixelRect(_centerPosition + offset, tailSize);
+        }
+        
+        public void Draw(SpriteBatch spriteBatch, float swipeErrorAllowedPercentage)
+        {
+            var area = DrawArea();
+
+            spriteBatch.Draw(StyleSheet.ShootingTailTexture, area,
                 Color.White * swipeErrorAllowedPercentage);
             
-            spriteBatch.Draw(StyleSheet.ShootingStarTexture, destinationRectangle: VirtualCoords.ComputePixelRect(_centerPosition + offset, tailSize), Color.White);
+            spriteBatch.Draw(StyleSheet.ShootingStarTexture, destinationRectangle: area, Color.White);
             
             if (swipeErrorAllowedPercentage > 0.0001f)
-                spriteBatch.Draw(StyleSheet.ShootingButtonTexture, destinationRectangle: VirtualCoords.ComputePixelRect(_centerPosition + offset, tailSize), Color.DarkGreen);
+                spriteBatch.Draw(StyleSheet.ShootingButtonTexture, destinationRectangle: area, Color.DarkGreen);
         }
     }
 }
