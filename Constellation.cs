@@ -56,6 +56,8 @@ namespace ggj20
             _swipeLine.Update(gameTime, _centerPosition);
 
             _associatedWord.ActiveWord = dictionary.ClosestWordToSwipePattern(_swipeLine.HandlePositionsRelative);
+
+            _associatedWord.UpdateConstallationWord(_selectionInterpolation);
         }
 
         public void Draw(SpriteBatch spriteBatch)
