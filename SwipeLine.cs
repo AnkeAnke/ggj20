@@ -116,18 +116,19 @@ namespace ggj20
             var mouseState = Mouse.GetState();
             SwipeKeyboard.GetBoundingBox(centerPosition, out Vector2 cornerKeyboard, out Vector2 sizeKeyboard);
             Rectangle rectKeyboard = VirtualCoords.ComputePixelRect(cornerKeyboard, sizeKeyboard);
-            if (_selectedHandle != -1)
+            bool mouseInside = rectKeyboard.Contains(mouseState.Position);
+            if (_selectedHandle != -1 && mouseInside)
             {
                 HandlePositionsRelative[_selectedHandle] = (mouseState.Position - rectKeyboard.Location).ToVector2() / rectKeyboard.Width;
             }
 
-            bool clicked  = mouseState.LeftButton == ButtonState.Pressed && _lastMouseState.LeftButton == ButtonState.Released && rectKeyboard.Contains(mouseState.Position);
+            bool clicked  = mouseState.LeftButton == ButtonState.Pressed && _lastMouseState.LeftButton == ButtonState.Released && mouseInside;
             bool released = mouseState.LeftButton == ButtonState.Released && _lastMouseState.LeftButton == ButtonState.Pressed;
             float radius = SELECTED_STAR_SIZE;
             float radiusScaled = VirtualCoords.ComputePixelScale(radius);
             int closestStar = -1;
 
-            if (_selectedHandle == -1 && rectKeyboard.Contains(mouseState.Position))
+            if (_selectedHandle == -1 && mouseInside)
             {
                 float minDist = float.MaxValue;
                 for (int h = 0; h < Length; ++h)
