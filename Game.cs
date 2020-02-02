@@ -25,7 +25,7 @@ namespace ggj20
         private float _currentSwipeError;
         private float _currentSwipeErrorAllowedPercentage;
 
-        private string[] levelNames = new[] {"Content/level1.lvl", "Content/level2.lvl "};
+        private string[] levelNames = new[] {"Content/level1.lvl", "Content/level2.lvl", "Content/level3.lvl"};
         private int currentLevel = 0;
 
         public Game()
@@ -150,7 +150,6 @@ namespace ggj20
 
             _spriteBatch.Begin(blendState: BlendState.AlphaBlend);
             _activeLevel.Draw(_spriteBatch, _currentState);
-            
             
             _rateMeButton.Draw(_spriteBatch, _currentSwipeErrorAllowedPercentage, _activeLevel.CurrentSentence != _activeLevel.OriginalSentence);
             if (_currentState == State.Rating)
